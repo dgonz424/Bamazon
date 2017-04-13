@@ -20,15 +20,17 @@ connection.connect(function(err) {
   else {console.log("Connected")}
 });
 
+//function at bottom
 start();
 
+//series of prompts to determine item being purchased and if order can be fulfilled 
 function purchaseProducts () {
           inquirer.prompt([
               {
                 name: "productID"
-                message: "Please type and enter the ID of the item you'd like to purchase listed above."
+                message: "Please enter the ID of the item you'd like to purchase."
               }
-            ]) .then(function (answer) {
+            ]).then(function (answer) {
             console.log("You selected product ID" + answer.productID);
 
             connection.query('SELECT * FROM products ', function (error, results, fields) {
@@ -50,22 +52,21 @@ function purchaseProducts () {
                         console.log("Great, your total is $" + priceResults*answer.inStock);
                         purchaseProducts();
                     }
-                    else{
+                    else {
                       console.log("Our apologies, we cannot fulfill your order. We don't have that many " + productResults + " available at this time. Please check again later.")
                       purchaseProducts();
                     }
-                    });
-                    });
-                    });
-                    }
-                    }
+                  });
+                });
+              });
+            }
+           }
 
+//load query to begin purchase function
 function start () {
   connection.query('SELECT * FROM products', function(error, results, fields) {
-
               if (error) throw error;
-              console.log(results);
+              else {console.log(results)};
               purchaseProducts();
-
             });
 }
